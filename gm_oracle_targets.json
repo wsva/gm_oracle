@@ -1,0 +1,16 @@
+[
+  {
+    "Name": "test",
+    "Enable": true,
+    "Address": "127.0.0.1",
+    "DB": {
+      "Type": "Oracle",
+      "Oracle": {
+        "Username": "system",
+        "Password": "mypassword",
+        "ConnectString": "127.0.0.1:1521/XEPDB1"
+      }
+    },
+    "ExcludeTableSpace": ["SYSTEM", "SYSAUX"]
+  }
+]
