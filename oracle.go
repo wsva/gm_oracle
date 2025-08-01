@@ -7,11 +7,11 @@ import (
 	"sync"
 
 	wl_db "github.com/wsva/lib_go_db"
-	ml_detail "github.com/wsva/monitor_lib_go/detail"
+	mlib "github.com/wsva/monitor_lib_go"
 )
 
 type MDInfo struct {
-	MD        ml_detail.MDOracle
+	MD        mlib.MDOracle
 	Lock      sync.Mutex
 	WG        sync.WaitGroup
 	ErrorList []string
@@ -77,7 +77,7 @@ FROM V$RECOVERY_FILE_DEST`
 		return
 	}
 	m.Lock.Lock()
-	m.MD.ArchiveLog = ml_detail.ArchiveLog{
+	m.MD.ArchiveLog = mlib.ArchiveLog{
 		Size: int(g1.Int32),
 		Used: int(g2.Int32),
 	}
@@ -113,7 +113,7 @@ FROM V$ASM_DISKGROUP`
 		m.AddError(fmt.Sprintf("CheckASM error: %v", err))
 		return
 	}
-	var result []ml_detail.ASM
+	var result []mlib.ASM
 	var g1 sql.NullString
 	var g2, g3 sql.NullInt32
 	for rows.Next() {
@@ -122,7 +122,7 @@ FROM V$ASM_DISKGROUP`
 			m.AddError(fmt.Sprintf("CheckASM error: %v", err))
 			return
 		}
-		result = append(result, ml_detail.ASM{
+		result = append(result, mlib.ASM{
 			Name: g1.String,
 			Size: int(g2.Int32),
 			Used: int(g3.Int32),
@@ -153,7 +153,7 @@ AND S.TABLESPACE_ID = T.TS#`
 		m.AddError(fmt.Sprintf("CheckTableSpace error: %v", err))
 		return
 	}
-	var result []ml_detail.TableSpace
+	var result []mlib.TableSpace
 	var f1 sql.NullString
 	var f2, f3 sql.NullInt32
 	for rows.Next() {
@@ -162,7 +162,7 @@ AND S.TABLESPACE_ID = T.TS#`
 			m.AddError(fmt.Sprintf("CheckTableSpace error: %v", err))
 			return
 		}
-		result = append(result, ml_detail.TableSpace{
+		result = append(result, mlib.TableSpace{
 			Name: f1.String,
 			Size: int(f2.Int32),
 			Used: int(f3.Int32),
@@ -189,7 +189,7 @@ GROUP BY A.OBJECT_NAME, B.ORACLE_USERNAME`
 		m.AddError(fmt.Sprintf("CheckTableLock error: %v", err))
 		return
 	}
-	var result []ml_detail.TableLock
+	var result []mlib.TableLock
 	var f1, f2 sql.NullString
 	var f3 sql.NullInt32
 	for rows.Next() {
@@ -198,7 +198,7 @@ GROUP BY A.OBJECT_NAME, B.ORACLE_USERNAME`
 			m.AddError(fmt.Sprintf("CheckTableLock error: %v", err))
 			return
 		}
-		result = append(result, ml_detail.TableLock{
+		result = append(result, mlib.TableLock{
 			Name:     f1.String,
 			Username: f2.String,
 			Count:    int(f3.Int32),

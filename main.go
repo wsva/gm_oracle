@@ -38,10 +38,10 @@ func checkOracle(t TargetOracle, wg *sync.WaitGroup) {
 		resultsRuntimeLock.Lock()
 		if err != nil {
 			resultsRuntime = append(resultsRuntime,
-				mlib.GetMR(t.Name, t.Address, mlib.MTypeOracle, "", err.Error()))
+				mlib.NewMR(t.Name, t.Address, "oracle", "", err.Error()))
 		} else {
 			resultsRuntime = append(resultsRuntime,
-				mlib.GetMR(t.Name, t.Address, mlib.MTypeOracle, jsonString, ""))
+				mlib.NewMR(t.Name, t.Address, "oracle", jsonString, ""))
 		}
 		resultsRuntimeLock.Unlock()
 	}()
